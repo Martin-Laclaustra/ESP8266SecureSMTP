@@ -1,8 +1,8 @@
 #include <ESP8266WiFi.h>
-#include <ESP8266SMTP.h>
+#include <ESP8266SecureSMTP.h>
 
-const char* ssid = "";            		// WIFI network name
-const char* password = "";        		// WIFI network password
+const char* ssid = "";                  // WIFI network name
+const char* password = "";              // WIFI network password
 uint8_t connection_state = 0;           // Connected to WIFI or not
 uint16_t reconnect_interval = 10000;    // If not connected wait time to try again
 
@@ -52,8 +52,8 @@ void setup()
 	
 	connection_state = WiFiConnect(ssid, password);
 
-	if(!connection_state) {  				// if not connected to WIFI
-		Awaits(reconnect_interval);         // constantly trying to connect
+	if(!connection_state) {				// if not connected to WIFI
+		Awaits(reconnect_interval);		// constantly trying to connect
 	}
 
 	uint32_t startTime = millis();
@@ -63,7 +63,7 @@ void setup()
 		.Subject("ESP8266SMTP Gmail test")
 		.setFrom("ESP8266SMTP")
 		.setForGmail();						// simply sets port to 465 and setServer("smtp.gmail.com");						
-																   // message text from http://www.blindtextgenerator.com/lorem-ipsum
+											// message text from http://www.blindtextgenerator.com/lorem-ipsum
 	if(SMTP.Send("Recipient Email, use comma for multiple recipients", "The European languages are members of the same family. Their separate existence is a myth. For science, music, sport, etc, Europe uses the same vocabulary. The languages only differ in their grammar, their pronunciation and their most common words. Everyone realizes why a new common language would be desirable: one could refuse to pay expensive translators. To achieve this, it would be necessary to have uniform grammar, pronunciation and more common words. If several languages coalesce, the grammar of the resulting language is more simple and regular than that of the individual languages. The new common language will be more simple and regular than the existing European languages. It will be as simple as Occidental; in fact, it will be Occidental. To an English person, it will seem like simplified English, as a skeptical Cambridge friend of mine told me what Occidental is. The European languages are members of the same family. Their separate existence is a myth. For science, music, sport, etc, Europe uses the same vocabulary. The languages only differ in their grammar, their pronunciation and their most common words. Everyone realizes why a new common language would be desirable: one could refuse to pay expensive translators. To achieve this, it would be necessary to have uniform grammar, pronunciation and more common words. If several languages coalesce, the grammar of the resulting language is more simple and regular than that of the individual languages. The new common language will be more simple and regular than the existing European languages. It will be as simple as Occidental; in fact, it will be Occidental. To an English person, it will seem like simplified English, as a skeptical Cambridge friend of mine told me what Occidental is. The European languages are members of the same family. Their separate existence is a myth. For science, music, sport, etc, Europe uses the same vocabulary. The languages only differ in their grammar, their pronunciation and their most common words. Everyone realizes why a new common language would be desirable: one could refuse to pay expensive translators. To achieve this, it would be necessary to have uniform grammar, pronunciation and more common words. If several languages coalesce, the grammar of the resulting language is more simple and regular than that of the individual languages. The new common language will be more simple and regular than the existing European languages. It will be as simple as Occidental; in fact, it will be Occidental. To an English person, it will seem like simplified English, as a skeptical Cambridge friend of mine told me what Occidental is.The European languages are members of the same family. Their separate existence is a myth. For science, music, sport, etc, Europe uses the same vocabulary. The languages only differ in their grammar, their pronunciation and their most common words. Everyone realizes why a new common language would be desirable: one could refuse to pay expensive translators. To achieve this, it would be necessary to have uniform grammar, pronunciation and more common ")) {
 		Serial.println(F("Message sent"));
 	} else {

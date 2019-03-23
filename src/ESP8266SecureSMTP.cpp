@@ -1,4 +1,4 @@
-#include <ESP8266SMTP.h>
+#include <ESP8266SecureSMTP.h>
 #include <base64.h>
 
 ESP8266SMTPHelper::ESP8266SMTPHelper(const char* login, const char* password) :
@@ -90,9 +90,9 @@ const char* ESP8266SMTPHelper::getError()
 	return _error;
 }
 
-String ESP8266SMTPHelper::getLastResponce()
+String ESP8266SMTPHelper::getLastResponse()
 {
-	return _serverResponce;
+	return _serverResponse;
 }
 
 bool ESP8266SMTPHelper::AwaitSMTPResponse(WiFiClientSecure &client, const String &resp, uint16_t timeOut)
@@ -104,11 +104,11 @@ bool ESP8266SMTPHelper::AwaitSMTPResponse(WiFiClientSecure &client, const String
 			return false;
 		}
 	}
-	_serverResponce = client.readStringUntil('\n');
+	_serverResponse = client.readStringUntil('\n');
 #if defined(GS_SERIAL_LOG_LEVEL_1) || defined(GS_SERIAL_LOG_LEVEL_2) 
-	Serial.println(_serverResponce);
+	Serial.println(_serverResponse);
 #endif
-	return !resp || _serverResponce.indexOf(resp) != -1;
+	return !resp || _serverResponse.indexOf(resp) != -1;
 }
 
 bool ESP8266SMTPHelper::Send(const String &to, const String &message)

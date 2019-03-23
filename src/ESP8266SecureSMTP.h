@@ -5,13 +5,13 @@
 *  May 11 2017
 */
 
-#ifndef _ESP8266SMTPHelper_H
-#define _ESP8266SMTPHelper_H
+#ifndef _ESP8266SecureSMTPHelper_H
+#define _ESP8266SecureSMTPHelper_H
 
 #include <WiFiClientSecure.h>
 
-//#define GS_SERIAL_LOG_LEVEL_1      // Print to Serial only server responce
-//#define GS_SERIAL_LOG_LEVEL_2      // Print to Serial client commands and server responce
+//#define GS_SERIAL_LOG_LEVEL_1      // Print to Serial only server response
+//#define GS_SERIAL_LOG_LEVEL_2      // Print to Serial client commands and server response
 
 const char HTML_HEAD[] PROGMEM  = "Mime-Version: 1.0\r\nContent-Type: text/html; charset=\"UTF-8\";\r\nContent-Transfer-Encoding: 7bit;\r\n\r\n<!DOCTYPE html><html lang=\"en\">";
 const char HTML_END[] PROGMEM   = "</html>\r\n.";
@@ -33,7 +33,7 @@ class ESP8266SMTPHelper
 		*_base64_password = nullptr,
 		*_from            = nullptr,
 		*_subject         = nullptr;
-	String _serverResponce;
+	String _serverResponse;
 	bool AwaitSMTPResponse(WiFiClientSecure &client, const String &resp = "", uint16_t timeOut = 10000);
 
 	public:
@@ -51,7 +51,7 @@ class ESP8266SMTPHelper
 	char* getBase64Email();
 	char* getBase64Password();
 
-	String getLastResponce();
+	String getLastResponse();
 	const char* getError();
 
 	bool Send(const String &to, const String &message);
