@@ -1,6 +1,8 @@
-# ESP8266SMTP
+# ESP8266SecureSMTP
 
-SMTP email library for ESP8266 based boards programmed in Arduino environment.
+SMTP email library for ESP8266 based boards programmed in Arduino environment. It uses a certificate database to verify the server (work in progress).
+Based on the code of [ESP8266SMTP](https://github.com/CosmicBoris/ESP8266SMTP) written by 
+Boris Shobat.
 
 ## Table of Contents
 1. [Overview](#section-o)
