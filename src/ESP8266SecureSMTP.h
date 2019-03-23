@@ -3,6 +3,8 @@
 *  using Arduino core for ESP8266 WiFi chip
 *  by Boris Shobat
 *  May 11 2017
+*  Updated for BearSSL by Martin Laclaustra
+*  2019-03-23
 */
 
 #ifndef _ESP8266SecureSMTPHelper_H
@@ -36,6 +38,16 @@ class ESP8266SMTPHelper
   String _serverResponse;
   bool AwaitSMTPResponse(WiFiClientSecure &client, const String &resp = "", uint16_t timeOut = 10000);
 
+  // settings to pass to secure client
+  bool _use_insecure;
+  bool _use_fingerprint;
+  uint8_t _fingerprint[20];
+  bool _use_self_signed;
+  const PublicKey *_knownkey;
+  unsigned _knownkey_usages;
+  const X509List *_ta;
+  CertStore *_certStore;
+  
   public:
   ESP8266SMTPHelper() = default;
   ESP8266SMTPHelper(const char*, const char*);
@@ -50,6 +62,43 @@ class ESP8266SMTPHelper
     &setForGmail();
   char* getBase64Email();
   char* getBase64Password();
+
+  // methods for settings to pass to secure client
+  void _clearAuthenticationSettings();
+  // Don't validate the chain, just accept whatever is given.  VERY INSECURE!
+  void setInsecure() {
+    _clearAuthenticationSettings();
+    _use_insecure = true;
+  }
+  // Assume a given public key, don't validate or use cert info at all
+  void setKnownKey(const PublicKey *pk, unsigned usages = BR_KEYTYPE_KEYX | BR_KEYTYPE_SIGN) {
+    _clearAuthenticationSettings();
+    _knownkey = pk;
+    _knownkey_usages = usages;
+  }
+  // Only check SHA1 fingerprint of certificate
+  bool setFingerprint(const uint8_t fingerprint[20]) {
+    _clearAuthenticationSettings();
+    _use_fingerprint = true;
+    memcpy_P(_fingerprint, fingerprint, 20);
+    return true;
+  }
+  // only accept fingerprint as array, not as hex string (the client does)
+  //bool setFingerprint(const char *fpStr);
+  // Accept any certificate that's self-signed
+  void allowSelfSignedCerts() {
+    _clearAuthenticationSettings();
+    _use_self_signed = true;
+  }
+  // Install certificates of trusted CAs or specific site
+  void setTrustAnchors(const X509List *ta) {
+    _clearAuthenticationSettings();
+    _ta = ta;
+  }
+  // Attach a preconfigured certificate store
+  void setCertStore(CertStore *certStore) {
+    _certStore = certStore;
+  }
 
   String getLastResponse();
   const char* getError();

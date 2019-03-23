@@ -85,6 +85,14 @@ char* ESP8266SMTPHelper::getBase64Password()
   return _base64_password;
 }
 
+void ESP8266SMTPHelper::_clearAuthenticationSettings() {
+  _use_insecure = false;
+  _use_fingerprint = false;
+  _use_self_signed = false;
+  _knownkey = nullptr;
+  _ta = nullptr;
+}
+
 const char* ESP8266SMTPHelper::getError()
 {
   return _error;
@@ -117,15 +125,28 @@ bool ESP8266SMTPHelper::Send(const String &to, const String &message)
     _error = "SMTP server not set.";
     return false;
   }
+  if (!_use_insecure && !_use_fingerprint && !_use_self_signed && !_knownkey && !_certStore && !_ta) {
+    _error = "authentication option not set.";
+    return false;
+  }
 
   WiFiClientSecure client;
+
+  if (_use_insecure) client.setInsecure();
+  if (_use_fingerprint) client.setFingerprint(_fingerprint);
+  if (_use_self_signed) client.allowSelfSignedCerts();
+  if (_knownkey) client.setKnownKey(_knownkey, _knownkey_usages);
+  if (_ta) client.setTrustAnchors(_ta);
+  if (_certStore) client.setCertStore(_certStore);
 
 #if defined(GS_SERIAL_LOG_LEVEL_2)
   Serial.print(F("Connecting to: "));
   Serial.println(_smtp_server);
 #endif
   if(!client.connect(_smtp_server, _smtp_port)) {
-    _error = "Could not connect to mail server";
+    char buf[100];
+    client.getLastSSLError(buf, 100);
+    _error = (String("Could not connect to mail server: ")+String(buf)).c_str();
     return false;
   }
   if(!AwaitSMTPResponse(client, "220")) {
