@@ -36,10 +36,10 @@ void setup()
 
   //SMTP.setInsecure(); // Alternatively, uncomment this and comment SMTP.setFingerprint below
 
-  const uint8_t fingerprint[] = {0x76, 0xc4, 0xac, 0x8e, 0xe5, // smtp.gmail.com fingerprint
-                                 0x92, 0x2b, 0x5e, 0x73, 0x82,
-                                 0x12, 0xf5, 0x70, 0x26, 0xf5,
-                                 0x28, 0x1c, 0xb3, 0x64, 0xe1};
+   const uint8_t fingerprint[] = {0x94,0x44,0x97,0xD1,0xC5,    // smtp.gmail.com fingerprint
+                                  0x65,0x8B,0x2F,0x9F,0xC5,
+                                  0xE3,0xC3,0xCD,0x05,0x93,
+                                  0xF2,0x2D,0x99,0x60,0xFC};
   SMTP.setFingerprint(fingerprint);
 
                       // message text from http://www.blindtextgenerator.com/lorem-ipsum
